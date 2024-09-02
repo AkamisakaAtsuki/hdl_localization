@@ -27,7 +27,7 @@ public:
     initialize_params();
 
     // publish globalmap with "latched" publisher
-    globalmap_pub = this->create_publisher<sensor_msgs::msg::PointCloud2>("/globalmap", rclcpp::QoS(5).transient_local());
+    globalmap_pub = this->create_publisher<sensor_msgs::msg::PointCloud2>("/globalmap", 5);
     map_update_sub = this->create_subscription<std_msgs::msg::String>("/map_request/pcd", 10, std::bind(&GlobalmapServer::map_update_callback, this, _1));
 
     globalmap_pub_timer = this->create_wall_timer(1s, std::bind(&GlobalmapServer::pub_once_cb, this));
@@ -61,7 +61,7 @@ private:
     }
 
     // downsample globalmap
-    double downsample_resolution = this->get_parameter("downsample_resolution").as_bool();
+    double downsample_resolution = this->get_parameter("downsample_resolution").as_double();
     std::shared_ptr<pcl::VoxelGrid<PointT>> voxelgrid(new pcl::VoxelGrid<PointT>());
     voxelgrid->setLeafSize(downsample_resolution, downsample_resolution, downsample_resolution);
     voxelgrid->setInputCloud(globalmap);
@@ -113,4 +113,3 @@ private:
 
 #include <rclcpp_components/register_node_macro.hpp>
 RCLCPP_COMPONENTS_REGISTER_NODE(hdl_localization::GlobalmapServer)
-
