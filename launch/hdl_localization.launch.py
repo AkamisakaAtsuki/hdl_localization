@@ -87,6 +87,7 @@ def generate_launch_description():
                         remappings=[
                             ("/velodyne_points", points_topic),
                             ("/gpsimu_driver/imu_data", imu_topic),
+                            ("/odom", "/hdl_localization/odom"),   
                         ],
                         parameters=[
                             params_file,
